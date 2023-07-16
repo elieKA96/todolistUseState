@@ -1,25 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import AddTodo from "./Components/AddTodo";
+import TodoList from "./Components/TodoList";
+
 
 function App() {
+
+  const [todoList, setTodoList] = useState([]);
+
+  function addTodo(content){
+    const todo = {
+      id: crypto.randomUUID(),
+      done:false,
+      edit:false,
+      content
+    };
+    setTodoList([...todoList, todo]);
+  }
+
+  function deleteTodo(id){
+    setTodoList(todoList.filter((todo) => todo.id !== id))
+  }
+
+  function toggleTodo(id){
+    setTodoList(
+      todoList.map((todo) =>
+      todo.id === id ? {...todo, done: !todo.done} : todo)
+    );
+  }
+
+  function togggleTodoEdit(id){
+    setTodoList(
+      todoList.map((todo) =>
+      todo.id === id ? { ...todo, edit: !todo.edit}: todo)
+    );
+  }
+
+  function editTodo(id, content){
+    setTodoList(
+      todoList.map((todo)=> 
+      todo.id === id ? {...todo, edit: false, content} : todo)
+    )
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex justify-center items-center p-4">
+    <div className="container mx-auto w-1/2">
+      <h1 className="font-bold text-3xl text-grey-darkest mb-4">Todo List</h1>
+      <AddTodo addTodo={addTodo}/>
+      <TodoList 
+        todoList={todoList} 
+        deleteTodo = {deleteTodo}
+        toggleTodo = {toggleTodo}
+        togggleTodoEdit ={togggleTodoEdit}
+        editTodo = {editTodo}
+      />
     </div>
+  </div>
   );
 }
 
 export default App;
+
+
